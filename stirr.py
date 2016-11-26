@@ -7,19 +7,6 @@ from formatter import *
 
 #FUNCTIONS
 
-def switchHalfs(s):
-    """type: string
-       rtype: string
-       returns the original string, switching the placement
-       of both halfs.
-                     """
-    
-    middle = len(s)//2
-    s1 = s[0:middle]
-    s2 = s[middle:]
-    switched = s2 + s1
-    return switched
-
 def altOperator(arg1, op, arg2):
     
     if op == ">=":
