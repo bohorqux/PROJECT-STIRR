@@ -1,24 +1,11 @@
 #!/usr/bin/python3
 
 import sys
-
+from formatter import *
 
 ##############################
 
 #FUNCTIONS
-
-def switchHalfs(s):
-    """type: string
-       rtype: string
-       returns the original string, switching the placement
-       of both halfs.
-                     """
-    
-    middle = len(s)//2
-    s1 = s[0:middle]
-    s2 = s[middle:]
-    switched = s2 + s1
-    return switched
 
 def altOperator(arg1, op, arg2):
     
@@ -46,15 +33,15 @@ def altIterator(fi, fo, contents):
 
     if contents[0] == "for":
         fo.write("%s = %s\n" % (contents[2], contents[4]))
-        fo.write("while ( %s %s %s ) \n" % (contents[5], contents[6], contents[7][0:-1]))
+        fo.write("while ( %s %s %s )\n" % (contents[5], contents[6], contents[7][0:-1]))
         
-        for line in fi:
-            if "}" in line:
-                fo.write("%s;\n" % contents[-2])
-                fo.write("   }\n")
-                return
-            else:
-                fo.write(line)
+    for line in fi:
+        if "}" in line:
+            fo.write("%s;\n" % contents[-2])
+            fo.write("}")
+            return
+        else:
+            fo.write(line)
                 
 ##############################
 
@@ -110,7 +97,7 @@ def main(argv):
     fileIn.close()
     fileOut.close()
 
-#    reFormat("pre_stirr.c")
+    formatThis("pre_stirr.c", "   ", "\n")
     
 if __name__ == "__main__":
     main(sys.argv)
