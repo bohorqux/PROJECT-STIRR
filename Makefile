@@ -1,2 +1,2 @@
 clean:
-	rm *~ *# stirr.c pre_stirr.c text 
+	rm *~ *# stirr.c pre_stirr.c 
