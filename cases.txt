@@ -1,0 +1,24 @@
+if ( P )
+
+if ( ! ( P ) )
+
+if ( P && Q )
+
+if ( Q || P )
+
+if ( ! ( P && Q ) )
+
+if ( ! ( P ) && ! ( Q ) )
+
+if ( P == Q )
+
+if ( P != Q )
+
+if ( P < Q )
+
+if ( P <= Q )
+
+if ( P > Q )
+
+if ( P >= Q )
+
