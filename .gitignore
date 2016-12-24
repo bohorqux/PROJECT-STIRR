@@ -2,3 +2,4 @@ moss
 *~
 *#
 __pycache__/
+*.c
