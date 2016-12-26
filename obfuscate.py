@@ -1,32 +1,81 @@
 #!/usr/bin/python
 
+#Author: Xavier J. Bohorquez
+#File: obfuscate.py
+#Description: Consider this program a 'toolset' that contains the proper functions to obfuscate conditional statements and randomize the output of this obfuscation.
+
 import sys
 import random
 
-uni_logic = {'P': ["!!P", "P || P", "P && P", "!!P && P", "!!P || P", "P", "!!P && !!P", "!!P || !!P"],
-             'Q': ["!!Q", "Q || Q", "Q && Q", "!!Q && Q", "!!Q || Q", "Q", "!!Q && !!Q", "!!Q || !!Q"]} #should include function that can translate boolean expression based on P expression
+#dictionary should be constructed as such -> {'P': ["!!P", "P || P", "P && P", "!!P && P", "!!P || P", "P", "!!P && !!P", "!!P || !!P"]}
+#Assume P = True, or P = False. Every statement shown here must output to true
+
 anti_bool = ["for", "while", "if", "||", "&&", "elif", "else", "!"]
 
 #We can express a single True or False value with any of the stored expressions
 #As many times as we'd like, we could also recursivley go through a single value (i.e. P) and generate another equivalent expression based on our dictionary
 
-def obfuscateBoolean(key):
-    """ Outputs equivalent boolean expression """
-    
-    logic = random.choice(uni_logic[key]) #choose a random value that conserves logic, but appearence is altered.
-    
-    return logic
+#-------------------------------------------------------------------------------------------------------------------------------------#
+def createLogicDict(logicKey):
+    """returns a dictionary containing equivalent logical expressions of the inputted logic key
 
-def findP(keys):
-    """ Function that obtains single boolean expression based on given array of values
-        itype: array
-        rtype: indice
+       i-type:: string
+       r-type:: dictionary
     """
 
-    for index, item in enumerate(keys):
-        if item not in anti_bool:
-            return index
-    return -1
+    logicDict = {logicKey: ["!!" + logicKey, logicKey + " || " + logicKey, logicKey + " && " + logicKey,
+                            "!!" + logicKey + " && " + logicKey, "!!" + logicKey + " || " + logicKey, logicKey,
+                            "!!" + logicKey + " && " + "!!" + logicKey, "!!" + logicKey + " || " + "!!" + logicKey]
+                 }
+
+    return logicDict
+#######################################################################################################################################
+def obfuscateBoolean(key):
+    """ Outputs equivalent boolean expression """
+
+    logicDict = createLogicDict(key)
+    
+    logic = random.choice(logicDict[key]) #choose a random value that conserves logic, but appearence is altered.
+    
+    return logic
+#########################################################################################################################################
+def isTarget(elem):
+    """Boolean function that returns true if the element inputted is a 'logic Key'.
+       
+       i-type:: string
+       r-type:: boolean
+    """
+    if elem in anti_bool:
+        return False
+    else:
+        return True
+###########################################################################################################################################
+def findAllP(source):
+    """ returns array of len=2 tuples containing the indice of all logic elements stored in the source array 
+    
+        i-type:: array
+        r-type:: (indice, item) IN array
+    """
+
+    reduced = []
+    for index, item in enumerate(source):
+        if isTarget(item):
+            reduced += [(index, item)]
+            
+    return reduced
+##############################################################################################################################################
+def replaceSource(source, reduced):
+    """replaces the key logic values in source with their alternative expression. Indices for these logic values are found in reduced array
+
+       i-type:: array, (indice, item) IN array
+       r-type:: array
+    """
+
+    for index, item in reduced:
+        source[index] = obfuscateBoolean(item)
+
+    return source
+################################################################################################################################################
 
 def main(argv):
 
@@ -39,9 +88,11 @@ def main(argv):
         string = ""
         words = line.split()
         words = [x for x in words if x != ')' and x != '(']
-        p_Indice = findP(words)
-        words[p_Indice] = obfuscateBoolean(words[p_Indice])
-        print(words)
+        print("Original Case: ", words)
+        logicKeys = findAllP(words)
+        words = replaceSource(words, logicKeys)
+        print("Obfuscated Case ", words)
+        print()
 
     fileIn.close()
 main(sys.argv)
