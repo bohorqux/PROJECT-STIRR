@@ -3,7 +3,8 @@
 import sys
 import random
 
-uni_logic = {'P': ["!!P", "P || P", "P && P", "!!P && P", "!!P || P", "!!P && !!P", "!!P || !!P"]}
+uni_logic = {'P': ["!!P", "P || P", "P && P", "!!P && P", "!!P || P", "P", "!!P && !!P", "!!P || !!P"],
+             'Q': ["!!Q", "Q || Q", "Q && Q", "!!Q && Q", "!!Q || Q", "Q", "!!Q && !!Q", "!!Q || !!Q"]} #should include function that can translate boolean expression based on P expression
 anti_bool = ["for", "while", "if", "||", "&&", "elif", "else", "!"]
 
 #We can express a single True or False value with any of the stored expressions
@@ -38,7 +39,6 @@ def main(argv):
         string = ""
         words = line.split()
         words = [x for x in words if x != ')' and x != '(']
-        print("*** ", words)
         p_Indice = findP(words)
         words[p_Indice] = obfuscateBoolean(words[p_Indice])
         print(words)
