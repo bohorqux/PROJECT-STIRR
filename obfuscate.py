@@ -4,19 +4,28 @@ import sys
 import random
 
 uni_logic = {'P': ["!!P", "P || P", "P && P", "!!P && P", "!!P || P", "!!P && !!P", "!!P || !!P"]}
+anti_bool = ["for", "while", "if", "||", "&&", "elif", "else", "!"]
 
 #We can express a single True or False value with any of the stored expressions
 #As many times as we'd like, we could also recursivley go through a single value (i.e. P) and generate another equivalent expression based on our dictionary
 
-def obfuscateBoolean(keys):
-    #keys should never contain ')', '(', or certain keywords such as 'for' or 'if'. Implement data formatting to accomadate this in the future.
-    #use enumeration with arrays to properly extract dictionary value. Should not hardcode 'P' below to return equivalent value.
+def obfuscateBoolean(key):
+    """ Outputs equivalent boolean expression """
     
-    logic = random.choice(uni_logic['P']) #choose a random value that conserves logic, but appearence is altered.
-    #Do not hardcode P, use enumeration to find indice of the single logic value and replace it with P in this instance.
+    logic = random.choice(uni_logic[key]) #choose a random value that conserves logic, but appearence is altered.
+    
+    return logic
 
-    final = [keys[0], logic] + keys[1:] #We are assuming that our logic value comes right after the 'if' keyword
-    return final
+def findP(keys):
+    """ Function that obtains single boolean expression based on given array of values
+        itype: array
+        rtype: indice
+    """
+
+    for index, item in enumerate(keys):
+        if item not in anti_bool:
+            return index
+    return -1
 
 def main(argv):
 
@@ -30,8 +39,9 @@ def main(argv):
         words = line.split()
         words = [x for x in words if x != ')' and x != '(']
         print("*** ", words)
-        stirrd = obfuscateBoolean(words)
-        print(stirrd)
+        p_Indice = findP(words)
+        words[p_Indice] = obfuscateBoolean(words[p_Indice])
+        print(words)
 
     fileIn.close()
 main(sys.argv)
